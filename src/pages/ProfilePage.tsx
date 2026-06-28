@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Mail, Hash, BookOpen, GraduationCap, Settings, Camera, Layers } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { store } from '@/lib/store';
+import { store, useStore } from '@/lib/store';
 import BackButton from '@/components/BackButton';
 import type { UserProfile, CourseType } from '@/types';
 import { CLASS_OPTIONS, YEAR_OPTIONS } from '@/types';
@@ -21,7 +21,7 @@ const DEFAULT_PROFILE: UserProfile = {
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const [profile, setProfile] = useState<UserProfile>(() => store.get('profile', DEFAULT_PROFILE));
+  const [profile, setProfile] = useStore<UserProfile>('profile', DEFAULT_PROFILE);
   const [editing, setEditing] = useState(!profile.name);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

@@ -6,7 +6,7 @@ import {
 import { sampleAnnouncements } from '@/lib/sample-data';
 import type { Announcement } from '@/types';
 import BackButton from '@/components/BackButton';
-import { store } from '@/lib/store';
+import { store, useStore } from '@/lib/store';
 
 const PRIORITY_CONFIG = {
   urgent: { bg: 'bg-red-500/10', text: 'text-red-500', border: 'bg-red-500', label: 'Urgent' },
@@ -15,8 +15,8 @@ const PRIORITY_CONFIG = {
 };
 
 export default function AnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>(() => store.get('announcements', sampleAnnouncements));
-  const [readAnnouncements, setReadAnnouncements] = useState<string[]>(() => store.get('readAnnouncements', []));
+  const [announcements, setAnnouncements] = useStore<Announcement[]>('announcements', sampleAnnouncements);
+  const [readAnnouncements, setReadAnnouncements] = useStore<string[]>('readAnnouncements', []);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);

@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Plus, Trash2, CheckCircle2, Circle, Clock, CheckCircle, AlertTriangle, AlertCircle, FileText, XCircle } from 'lucide-react';
 import BackButton from '@/components/BackButton';
-import { store } from '@/lib/store';
+import { store, useStore } from '@/lib/store';
 import type { Assignment, AttendanceRecord } from '@/types';
 import { toast } from 'sonner';
 
@@ -11,7 +11,7 @@ type TabType = 'pending' | 'completed';
 type EnhancedAssignment = Assignment & { completedAt?: string };
 
 const AssignmentsPage = () => {
-  const [assignments, setAssignments] = useState<EnhancedAssignment[]>(() => store.get('assignments', []));
+  const [assignments, setAssignments] = useStore<EnhancedAssignment[]>('assignments', []);
   const [activeTab, setActiveTab] = useState<TabType>('pending');
   const [filterSubject, setFilterSubject] = useState('All Subjects');
   const [sortBy, setSortBy] = useState<'deadline' | 'priority' | 'latest'>('deadline');

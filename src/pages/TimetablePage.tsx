@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Plus, Trash2, Clock, ChevronRight, GraduationCap, School, ChevronLeft, Folder, FileText, LayoutDashboard, Download } from 'lucide-react';
 import BackButton from '@/components/BackButton';
 import { useNavigate } from 'react-router-dom';
-import { store } from '@/lib/store';
+import { store, useStore } from '@/lib/store';
 import { DAYS } from '@/types';
 import type { TimetableEntry } from '@/types';
 import { toast } from 'sonner';
@@ -28,7 +28,7 @@ const TimetablePage = () => {
   const [showPersonal, setShowPersonal] = useState(false);
 
   // Personal Timetable State
-  const [entries, setEntries] = useState<TimetableEntry[]>(() => store.get('timetable', []));
+  const [entries, setEntries] = useStore<TimetableEntry[]>('timetable', []);
   const [activeDay, setActiveDay] = useState(() => {
     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
     return DAYS.includes(today as any) ? today : 'Monday';

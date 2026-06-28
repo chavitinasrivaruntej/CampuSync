@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Plus, Trash2, CheckCircle2, XCircle, AlertCircle, TrendingUp, TrendingDown, Clock, BookOpen, ShieldCheck, AlertTriangle, Search } from 'lucide-react';
 import BackButton from '@/components/BackButton';
 import { useNavigate } from 'react-router-dom';
-import { store } from '@/lib/store';
+import { store, useStore } from '@/lib/store';
 import type { AttendanceRecord } from '@/types';
 import { toast } from 'sonner';
 
@@ -10,7 +10,7 @@ const THRESHOLD = 75;
 
 const AttendancePage = () => {
   const navigate = useNavigate();
-  const [records, setRecords] = useState<AttendanceRecord[]>(() => store.get('attendance', []));
+  const [records, setRecords] = useStore<AttendanceRecord[]>('attendance', []);
   const [isLoading, setIsLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [newRec, setNewRec] = useState({ subject: '', totalClasses: '', attendedClasses: '' });
