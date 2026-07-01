@@ -61,7 +61,7 @@ const CGPACalculator = () => {
   const profile = store.get('profile', { name: 'Student', course: 'B.Tech', year: 1, semester: 1 }) as UserProfile;
 
   // SGPA Semester-Based States
-  const [viewState, setViewState] = useState<'list' | 'create' | 'edit'>('list');
+  const [viewState, setViewState] = useState<'list' | 'create' | 'edit' | 'select_semester'>('select_semester');
   const [semesterRecords, setSemesterRecords] = useState<SemesterRecord[]>(() => store.get('semester_records', []));
   const [activeRecordId, setActiveRecordId] = useState<string | null>(null);
 
@@ -404,15 +404,43 @@ const CGPACalculator = () => {
     setViewState('edit');
   };
 
+  const handleSelectSemester = (num: number) => {
+    const title = `Semester ${num}`;
+    
+    // Check if a record with this exact title already exists
+    const existing = semesterRecords.find(r => r.title === title);
+    if (existing) {
+      setActiveRecordId(existing.id);
+      setViewState('edit');
+      return;
+    }
+
+    // Create a new record. Modular structure allows pre-filling subjects/credits based on branch/regulation here in the future.
+    const newRec: SemesterRecord = {
+      id: crypto.randomUUID(),
+      title: title,
+      studentName: profile.name,
+      course: profile.course,
+      year: profile.year.toString(),
+      subjects: [newSubject(), newSubject(), newSubject()], // Start with 3 empty subjects, no pre-filled data
+      lastUpdated: new Date().toISOString(),
+      sgpa: 0
+    };
+
+    saveRecords([newRec, ...semesterRecords]);
+    setActiveRecordId(newRec.id);
+    setViewState('edit');
+  };
+
   return (
     <div className="cs-page pb-8">
       <div className="flex flex-col gap-2 mb-6">
         <div className="flex items-center justify-between mb-2">
-          {viewState === 'list' ? (
-            <BackButton />
+          {viewState === 'select_semester' || tab === 'cgpa' ? (
+            <BackButton label="GPA Hub" />
           ) : (
             <button 
-              onClick={() => setViewState('list')}
+              onClick={() => setViewState('select_semester')}
               className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-xs font-bold uppercase tracking-widest"
             >
               <ArrowLeft className="w-4 h-4" /> Back
@@ -454,6 +482,58 @@ const CGPACalculator = () => {
       {/* ═══════ SGPA TAB ═══════ */}
       <div className={tab === 'sgpa' ? 'block' : 'hidden'}>
         
+        {/* → SEMESTER SELECTION VIEW */}
+        {viewState === 'select_semester' && (
+          <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-300">
+            <div className="cs-header-card rounded-2xl p-5">
+              <h3 className="text-sm font-bold text-foreground mb-1 uppercase tracking-wider">SGPA Calculator</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Select the semester for which you want to calculate your SGPA.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { num: 1, label: 'Semester 1', gradient: 'from-blue-500/10 to-blue-500/5', border: 'border-blue-500/20 hover:border-blue-500/40', iconBg: 'bg-blue-500 text-white' },
+                { num: 2, label: 'Semester 2', gradient: 'from-emerald-500/10 to-emerald-500/5', border: 'border-emerald-500/20 hover:border-emerald-500/40', iconBg: 'bg-emerald-500 text-white' },
+                { num: 3, label: 'Semester 3', gradient: 'from-indigo-500/10 to-indigo-500/5', border: 'border-indigo-500/20 hover:border-indigo-500/40', iconBg: 'bg-indigo-500 text-white' },
+                { num: 4, label: 'Semester 4', gradient: 'from-amber-500/10 to-amber-500/5', border: 'border-amber-500/20 hover:border-amber-500/40', iconBg: 'bg-amber-500 text-white' },
+                { num: 5, label: 'Semester 5', gradient: 'from-rose-500/10 to-rose-500/5', border: 'border-rose-500/20 hover:border-rose-500/40', iconBg: 'bg-rose-500 text-white' },
+                { num: 6, label: 'Semester 6', gradient: 'from-violet-500/10 to-violet-500/5', border: 'border-violet-500/20 hover:border-violet-500/40', iconBg: 'bg-violet-500 text-white' },
+                { num: 7, label: 'Semester 7', gradient: 'from-cyan-500/10 to-cyan-500/5', border: 'border-cyan-500/20 hover:border-cyan-500/40', iconBg: 'bg-cyan-500 text-white' },
+                { num: 8, label: 'Semester 8', gradient: 'from-orange-500/10 to-orange-500/5', border: 'border-orange-500/20 hover:border-orange-500/40', iconBg: 'bg-orange-500 text-white' },
+              ].map((sem) => (
+                <button
+                  key={sem.num}
+                  onClick={() => handleSelectSemester(sem.num)}
+                  className={`flex items-center gap-3 p-4 rounded-2xl border bg-gradient-to-br ${sem.gradient} ${sem.border} shadow-sm transition-all duration-300 hover:-translate-y-0.5 active:scale-95 text-left group`}
+                >
+                  <div className={`w-9 h-9 rounded-xl ${sem.iconBg} flex items-center justify-center font-bold text-sm shadow-md group-hover:scale-115 transition-transform shrink-0`}>
+                    {sem.num}
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-xs text-foreground group-hover:text-primary transition-colors truncate">
+                      {sem.label}
+                    </h4>
+                    <p className="text-[9px] text-muted-foreground uppercase tracking-wider font-semibold">Start GPA</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="flex flex-col items-center justify-center mt-6 pt-4 border-t border-border">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Or manage existing records</p>
+              <button
+                onClick={() => setViewState('list')}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary hover:bg-secondary/80 text-foreground text-xs font-bold transition-all active:scale-95"
+              >
+                <History className="w-4 h-4 text-primary" />
+                <span>View Saved Semester Records ({semesterRecords.length})</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* → LIST VIEW */}
         {viewState === 'list' && (
           <div className="space-y-4">
@@ -465,7 +545,7 @@ const CGPACalculator = () => {
                 <h3 className="text-lg font-bold text-foreground mb-2">No semester records yet</h3>
                 <p className="text-sm text-muted-foreground mb-6 max-w-[240px]">Create your first semester record to start tracking subjects and grades.</p>
                 <button 
-                  onClick={() => setViewState('create')}
+                  onClick={() => setViewState('select_semester')}
                   className="px-8 py-3.5 bg-primary text-primary-foreground rounded-xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform"
                 >
                   Create Semester Record
@@ -475,7 +555,7 @@ const CGPACalculator = () => {
               <div className="grid grid-cols-1 gap-3">
                 {/* Prominent Add Button */}
                 <button 
-                  onClick={() => setViewState('create')}
+                  onClick={() => setViewState('select_semester')}
                   className="w-full cs-card p-6 border-dashed border-2 bg-primary/5 hover:bg-primary/10 border-primary/20 transition-all flex flex-col items-center justify-center gap-2 mb-2 group active:scale-95 duration-200"
                 >
                   <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
