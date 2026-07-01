@@ -113,6 +113,7 @@ export interface UserProfile {
   semester: number;
   email: string;
   profilePicture?: string;
+  regulation?: string;
 }
 
 export const GRADE_POINTS: Record<string, number> = {

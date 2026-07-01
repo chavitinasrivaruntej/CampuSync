@@ -3,6 +3,7 @@ import { Plus, Trash2, RotateCcw, BookOpen, GraduationCap, Download, Share2, His
 import BackButton from '@/components/BackButton';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { store } from '@/lib/store';
+import { supabase } from '@/lib/supabase';
 import { GRADES, GRADE_POINTS } from '@/types';
 import type { Subject, UserProfile, SemesterRecord } from '@/types';
 import jsPDF from 'jspdf';
@@ -62,6 +63,7 @@ const CGPACalculator = () => {
 
   // SGPA Semester-Based States
   const [viewState, setViewState] = useState<'list' | 'create' | 'edit' | 'select_semester'>('select_semester');
+  const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
   const [semesterRecords, setSemesterRecords] = useState<SemesterRecord[]>(() => store.get('semester_records', []));
   const [activeRecordId, setActiveRecordId] = useState<string | null>(null);
 
@@ -438,36 +440,98 @@ const CGPACalculator = () => {
     return [newSubject(), newSubject(), newSubject()];
   };
 
-  const handleSelectSemester = (num: number) => {
+  const handleSelectSemester = async (num: number) => {
+    setIsLoadingTemplate(true);
     const title = `Semester ${num}`;
+    const reg = profile.regulation || 'R23';
+    const branch = profile.className || 'CSE';
     
-    // Check if a record with this exact title already exists
-    const existing = semesterRecords.find(r => r.title === title);
-    if (existing) {
-      setActiveRecordId(existing.id);
-      setViewState('edit');
-      return;
+    let templateSubjects: Subject[] = [];
+    
+    try {
+      const { data: dbTemplates } = await supabase
+        .from('semester_templates')
+        .select('*')
+        .eq('regulation', reg)
+        .eq('branch', branch)
+        .eq('semester', num)
+        .order('created_at', { ascending: true });
+      
+      if (dbTemplates && dbTemplates.length > 0) {
+        templateSubjects = dbTemplates.map((t: any) => ({
+          id: crypto.randomUUID(),
+          name: t.subject_name,
+          credits: parseFloat(t.credits),
+          grade: '',
+        }));
+      }
+    } catch (err) {
+      console.warn('Error fetching template from Supabase, falling back to local pre-fills', err);
+    }
+    
+    // Fallback to local hardcoded presets if database request returned nothing
+    if (templateSubjects.length === 0) {
+      templateSubjects = getPrefilledSubjectsForSemester(num);
     }
 
-    // Create a new record. Prefill logic handles Semester 2 and defaults others to blank.
-    const newRec: SemesterRecord = {
-      id: crypto.randomUUID(),
-      title: title,
-      studentName: profile.name,
-      course: profile.course,
-      year: profile.year.toString(),
-      subjects: getPrefilledSubjectsForSemester(num),
-      lastUpdated: new Date().toISOString(),
-      sgpa: 0
-    };
-
-    saveRecords([newRec, ...semesterRecords]);
-    setActiveRecordId(newRec.id);
+    // Now check if a user record for this semester already exists
+    const existing = semesterRecords.find(r => r.title.toLowerCase().trim() === title.toLowerCase());
+    
+    if (existing) {
+      // Merge! Preserve existing user grades for matching subjects.
+      const mergedSubjects = templateSubjects.map(tempSub => {
+        const userSub = existing.subjects.find(
+          u => u.name.toLowerCase().trim() === tempSub.name.toLowerCase().trim()
+        );
+        return {
+          ...tempSub,
+          grade: userSub ? userSub.grade : '',
+        };
+      });
+      
+      // Update existing record with merged template names/credits
+      const updatedRecords = semesterRecords.map(r => 
+        r.id === existing.id 
+          ? { 
+              ...r, 
+              subjects: mergedSubjects, 
+              sgpa: calculateSGPA(mergedSubjects),
+              lastUpdated: new Date().toISOString()
+            } 
+          : r
+      );
+      
+      saveRecords(updatedRecords);
+      setActiveRecordId(existing.id);
+    } else {
+      // Create new record with pre-filled subjects
+      const newRec: SemesterRecord = {
+        id: crypto.randomUUID(),
+        title: title,
+        studentName: profile.name,
+        course: profile.course,
+        year: profile.year.toString(),
+        subjects: templateSubjects,
+        lastUpdated: new Date().toISOString(),
+        sgpa: 0
+      };
+      
+      saveRecords([newRec, ...semesterRecords]);
+      setActiveRecordId(newRec.id);
+    }
+    
+    setIsLoadingTemplate(false);
     setViewState('edit');
   };
 
   return (
     <div className="cs-page pb-8">
+      {isLoadingTemplate && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center gap-3">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest animate-pulse">Fetching Semester Template...</p>
+        </div>
+      )}
       <div className="flex flex-col gap-2 mb-6">
         <div className="flex items-center justify-between mb-2">
           {viewState === 'select_semester' || tab === 'cgpa' ? (

@@ -102,3 +102,46 @@ CREATE POLICY "Allow public write access to attendance_records" ON public.attend
 
 CREATE POLICY "Allow public read access to timetable_entries" ON public.timetable_entries FOR SELECT USING (true);
 CREATE POLICY "Allow public write access to timetable_entries" ON public.timetable_entries FOR ALL USING (true) WITH CHECK (true);
+
+-- Create Semester Templates Table
+CREATE TABLE IF NOT EXISTS public.semester_templates (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    regulation TEXT NOT NULL, -- e.g. 'R23'
+    branch TEXT NOT NULL,     -- e.g. 'CSE'
+    semester INT NOT NULL,    -- e.g. 2, 3
+    subject_name TEXT NOT NULL,
+    credits NUMERIC NOT NULL,
+    subject_code TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.semester_templates ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access to semester_templates" ON public.semester_templates FOR SELECT USING (true);
+CREATE POLICY "Allow public write access to semester_templates" ON public.semester_templates FOR ALL USING (true) WITH CHECK (true);
+
+-- Seed Semester 2 Templates (R23 CSE)
+INSERT INTO public.semester_templates (regulation, branch, semester, subject_name, credits) VALUES
+('R23', 'CSE', 2, 'Differential Equations and Vector Calculus', 3),
+('R23', 'CSE', 2, 'Engineering Chemistry / Chemistry / Fundamental Chemistry', 3),
+('R23', 'CSE', 2, 'Communicative English Lab', 1),
+('R23', 'CSE', 2, 'Engineering Chemistry / Chemistry / Fundamental Chemistry Lab', 1),
+('R23', 'CSE', 2, 'Health and Wellness, Yoga and Sports', 0.5),
+('R23', 'CSE', 2, 'Communicative English', 2),
+('R23', 'CSE', 2, 'Basic Civil and Mechanical Engineering', 3),
+('R23', 'CSE', 2, 'Engineering Workshop', 1.5),
+('R23', 'CSE', 2, 'Data Structures Lab', 1.5),
+('R23', 'CSE', 2, 'Data Structures', 3)
+ON CONFLICT DO NOTHING;
+
+-- Seed Semester 3 Templates (R23 CSE)
+INSERT INTO public.semester_templates (regulation, branch, semester, subject_name, credits) VALUES
+('R23', 'CSE', 3, 'Environmental Science', 0),
+('R23', 'CSE', 3, 'Discrete Mathematics & Graph Theory', 3),
+('R23', 'CSE', 3, 'Managerial Economics and Financial Analysis', 2),
+('R23', 'CSE', 3, 'Computer Organization and Architecture', 3),
+('R23', 'CSE', 3, 'Advanced Data Structures Lab', 1.5),
+('R23', 'CSE', 3, 'Advanced Data Structures', 3),
+('R23', 'CSE', 3, 'Object Oriented Programming Through Java Lab', 1.5),
+('R23', 'CSE', 3, 'Object Oriented Programming Through Java', 3),
+('R23', 'CSE', 3, 'Python Programming', 2)
+ON CONFLICT DO NOTHING;
