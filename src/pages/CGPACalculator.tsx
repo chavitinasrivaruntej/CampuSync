@@ -13,7 +13,7 @@ const newSubject = (): Subject => ({
   id: crypto.randomUUID(),
   name: '',
   credits: 3,
-  grade: 'S',
+  grade: '',
 });
 
 interface CGPASemester {
@@ -404,6 +404,26 @@ const CGPACalculator = () => {
     setViewState('edit');
   };
 
+  const getPrefilledSubjectsForSemester = (semNum: number): Subject[] => {
+    if (semNum === 2) {
+      return [
+        { id: crypto.randomUUID(), name: 'Differential Equations and Vector Calculus', credits: 3, grade: '' },
+        { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry', credits: 3, grade: '' },
+        { id: crypto.randomUUID(), name: 'Communicative English Lab', credits: 1, grade: '' },
+        { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry Lab', credits: 1, grade: '' },
+        { id: crypto.randomUUID(), name: 'Health and Wellness, Yoga and Sports', credits: 0.5, grade: '' },
+        { id: crypto.randomUUID(), name: 'Communicative English', credits: 2, grade: '' },
+        { id: crypto.randomUUID(), name: 'Basic Civil and Mechanical Engineering', credits: 3, grade: '' },
+        { id: crypto.randomUUID(), name: 'Engineering Workshop', credits: 1.5, grade: '' },
+        { id: crypto.randomUUID(), name: 'Data Structures Lab', credits: 1.5, grade: '' },
+        { id: crypto.randomUUID(), name: 'Data Structures', credits: 3, grade: '' },
+      ];
+    }
+    
+    // Default fallback for other semesters
+    return [newSubject(), newSubject(), newSubject()];
+  };
+
   const handleSelectSemester = (num: number) => {
     const title = `Semester ${num}`;
     
@@ -415,14 +435,14 @@ const CGPACalculator = () => {
       return;
     }
 
-    // Create a new record. Modular structure allows pre-filling subjects/credits based on branch/regulation here in the future.
+    // Create a new record. Prefill logic handles Semester 2 and defaults others to blank.
     const newRec: SemesterRecord = {
       id: crypto.randomUUID(),
       title: title,
       studentName: profile.name,
       course: profile.course,
       year: profile.year.toString(),
-      subjects: [newSubject(), newSubject(), newSubject()], // Start with 3 empty subjects, no pre-filled data
+      subjects: getPrefilledSubjectsForSemester(num),
       lastUpdated: new Date().toISOString(),
       sgpa: 0
     };
@@ -734,6 +754,7 @@ const CGPACalculator = () => {
                         onChange={(e) => updateSubject(i, 'grade', e.target.value)}
                         className="w-full bg-secondary border-none rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20"
                       >
+                        <option value="">Select Grade</option>
                         {GRADES.map(g => (
                           <option key={g} value={g}>{g} ({GRADE_POINTS[g]} Pts)</option>
                         ))}
