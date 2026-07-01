@@ -461,13 +461,13 @@ const CGPACalculator = () => {
       </p>
 
       {/* Tab Switcher */}
-      <div className="flex bg-secondary rounded-2xl p-1 mb-5">
+      <div className="flex bg-secondary rounded-2xl p-1 mb-8">
         {(['sgpa', 'cgpa'] as const).map(t => (
           <button
             key={t}
             onClick={() => {
               setTab(t);
-              if (t === 'sgpa') setViewState('list');
+              if (t === 'sgpa') setViewState('select_semester');
             }}
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               tab === t ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'
@@ -484,14 +484,7 @@ const CGPACalculator = () => {
         
         {/* → SEMESTER SELECTION VIEW */}
         {viewState === 'select_semester' && (
-          <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-300">
-            <div className="cs-header-card rounded-2xl p-5">
-              <h3 className="text-sm font-bold text-foreground mb-1 uppercase tracking-wider">SGPA Calculator</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Select the semester for which you want to calculate your SGPA.
-              </p>
-            </div>
-
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
             <div className="grid grid-cols-2 gap-3">
               {[
                 { num: 1, label: 'Semester 1', gradient: 'from-blue-500/10 to-blue-500/5', border: 'border-blue-500/20 hover:border-blue-500/40', iconBg: 'bg-blue-500 text-white' },
@@ -502,33 +495,75 @@ const CGPACalculator = () => {
                 { num: 6, label: 'Semester 6', gradient: 'from-violet-500/10 to-violet-500/5', border: 'border-violet-500/20 hover:border-violet-500/40', iconBg: 'bg-violet-500 text-white' },
                 { num: 7, label: 'Semester 7', gradient: 'from-cyan-500/10 to-cyan-500/5', border: 'border-cyan-500/20 hover:border-cyan-500/40', iconBg: 'bg-cyan-500 text-white' },
                 { num: 8, label: 'Semester 8', gradient: 'from-orange-500/10 to-orange-500/5', border: 'border-orange-500/20 hover:border-orange-500/40', iconBg: 'bg-orange-500 text-white' },
-              ].map((sem) => (
-                <button
-                  key={sem.num}
-                  onClick={() => handleSelectSemester(sem.num)}
-                  className={`flex items-center gap-3 p-4 rounded-2xl border bg-gradient-to-br ${sem.gradient} ${sem.border} shadow-sm transition-all duration-300 hover:-translate-y-0.5 active:scale-95 text-left group`}
-                >
-                  <div className={`w-9 h-9 rounded-xl ${sem.iconBg} flex items-center justify-center font-bold text-sm shadow-md group-hover:scale-115 transition-transform shrink-0`}>
-                    {sem.num}
-                  </div>
-                  <div className="min-w-0">
-                    <h4 className="font-bold text-xs text-foreground group-hover:text-primary transition-colors truncate">
-                      {sem.label}
-                    </h4>
-                    <p className="text-[9px] text-muted-foreground uppercase tracking-wider font-semibold">Start GPA</p>
-                  </div>
-                </button>
-              ))}
+              ].map((sem) => {
+                const record = semesterRecords.find(
+                  (r) => r.title.toLowerCase().trim() === `semester ${sem.num}`
+                );
+                const hasRecord = !!record;
+                const isCompleted = hasRecord && record.sgpa > 0;
+                const isInProgress = hasRecord && record.sgpa === 0;
+
+                const statusLabel = isCompleted ? 'Completed' : isInProgress ? 'In Progress' : 'Not Started';
+                const detailLabel = isCompleted 
+                  ? `SGPA: ${record.sgpa.toFixed(2)}` 
+                  : isInProgress 
+                    ? `${record.subjects.length} Subjects` 
+                    : 'No Record';
+
+                const statusColor = isCompleted 
+                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' 
+                  : isInProgress 
+                    ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' 
+                    : 'bg-muted text-muted-foreground border-border/40';
+
+                return (
+                  <button
+                    key={sem.num}
+                    onClick={() => handleSelectSemester(sem.num)}
+                    className={`flex flex-col justify-between p-4 min-h-[105px] rounded-2xl border bg-gradient-to-br ${sem.gradient} ${sem.border} shadow-sm active:scale-[0.96] hover:-translate-y-0.5 transition-all duration-300 text-left group relative`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-2">
+                      <div className={`w-8 h-8 rounded-xl ${sem.iconBg} flex items-center justify-center font-bold text-xs shadow-sm group-hover:scale-110 transition-transform shrink-0`}>
+                        {sem.num}
+                      </div>
+                      <span className={`text-[8px] font-extrabold uppercase px-2 py-0.5 rounded-full border ${statusColor}`}>
+                        {statusLabel}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-xs text-foreground group-hover:text-primary transition-colors truncate">
+                        {sem.label}
+                      </h4>
+                      <p className="text-[10px] text-muted-foreground mt-0.5 font-medium">
+                        {detailLabel}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
-            <div className="flex flex-col items-center justify-center mt-6 pt-4 border-t border-border">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Or manage existing records</p>
+            <div className="flex flex-col items-center justify-center mt-8 pt-6 border-t border-border">
               <button
                 onClick={() => setViewState('list')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary hover:bg-secondary/80 text-foreground text-xs font-bold transition-all active:scale-95"
+                disabled={semesterRecords.length === 0}
+                className={`inline-flex items-center justify-between gap-3 w-full px-5 py-3.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] ${
+                  semesterRecords.length === 0 
+                    ? 'bg-secondary/40 text-muted-foreground/60 cursor-not-allowed border border-border/40'
+                    : 'bg-secondary hover:bg-secondary/80 text-foreground border border-border'
+                }`}
               >
-                <History className="w-4 h-4 text-primary" />
-                <span>View Saved Semester Records ({semesterRecords.length})</span>
+                <div className="flex items-center gap-2">
+                  <History className="w-4 h-4 text-primary" />
+                  <span>
+                    {semesterRecords.length === 0 ? 'No Saved Semester Records' : 'View Saved Semester Records'}
+                  </span>
+                </div>
+                {semesterRecords.length > 0 && (
+                  <span className="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[10px] font-black">
+                    {semesterRecords.length}
+                  </span>
+                )}
               </button>
             </div>
           </div>
