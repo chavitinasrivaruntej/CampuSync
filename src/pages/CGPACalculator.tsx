@@ -419,6 +419,20 @@ const CGPACalculator = () => {
         { id: crypto.randomUUID(), name: 'Data Structures', credits: 3, grade: '' },
       ];
     }
+
+    if (semNum === 3) {
+      return [
+        { id: crypto.randomUUID(), name: 'Environmental Science', credits: 0, grade: '' },
+        { id: crypto.randomUUID(), name: 'Discrete Mathematics & Graph Theory', credits: 3, grade: '' },
+        { id: crypto.randomUUID(), name: 'Managerial Economics and Financial Analysis', credits: 2, grade: '' },
+        { id: crypto.randomUUID(), name: 'Computer Organization and Architecture', credits: 3, grade: '' },
+        { id: crypto.randomUUID(), name: 'Advanced Data Structures Lab', credits: 1.5, grade: '' },
+        { id: crypto.randomUUID(), name: 'Advanced Data Structures', credits: 3, grade: '' },
+        { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java Lab', credits: 1.5, grade: '' },
+        { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java', credits: 3, grade: '' },
+        { id: crypto.randomUUID(), name: 'Python Programming', credits: 2, grade: '' },
+      ];
+    }
     
     // Default fallback for other semesters
     return [newSubject(), newSubject(), newSubject()];
@@ -767,7 +781,7 @@ const CGPACalculator = () => {
                         onChange={(e) => updateSubject(i, 'credits', parseFloat(e.target.value))}
                         className="w-full bg-secondary border-none rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20"
                       >
-                        {[0.5, 1, 1.5, 2, 2.5, 3, 4, 5].map(c => (
+                        {[0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5].map(c => (
                           <option key={c} value={c}>{c}</option>
                         ))}
                       </select>
