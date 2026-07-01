@@ -17,6 +17,8 @@ import EventsPage from "@/pages/EventsPage";
 import ProfilePage from "@/pages/ProfilePage";
 import SettingsPage from "@/pages/SettingsPage";
 import NotFound from "@/pages/NotFound";
+import GPACalculatorHub from "@/pages/GPACalculatorHub";
+import ComingSoon from "@/pages/ComingSoon";
 
 import { useEffect } from "react";
 import { store } from "@/lib/store";
@@ -39,7 +41,12 @@ const App = () => {
           <Route element={<MobileLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/utilities" element={<UtilitiesPage />} />
-            <Route path="/utilities/cgpa" element={<CGPACalculator />} />
+            <Route path="/utilities/cgpa" element={<GPACalculatorHub />} />
+            <Route path="/utilities/cgpa/calculator" element={<CGPACalculator />} />
+            <Route path="/utilities/cgpa/trend" element={<ComingSoon />} />
+            <Route path="/utilities/cgpa/predictor" element={<ComingSoon />} />
+            <Route path="/utilities/cgpa/required" element={<ComingSoon />} />
+            <Route path="/utilities/cgpa/history" element={<ComingSoon />} />
             <Route path="/utilities/timetable" element={<TimetablePage />} />
             <Route path="/utilities/attendance" element={<AttendancePage />} />
             <Route path="/utilities/calendar" element={<CalendarPage />} />

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Plus, Trash2, RotateCcw, BookOpen, GraduationCap, Download, Share2, History, FileText, ChevronRight, CheckCircle2, Eye, Calendar, User, School, ArrowLeft } from 'lucide-react';
 import BackButton from '@/components/BackButton';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { store } from '@/lib/store';
 import { GRADES, GRADE_POINTS } from '@/types';
 import type { Subject, UserProfile, SemesterRecord } from '@/types';
@@ -52,7 +52,10 @@ const getAcademicStatus = (gpa: number) => {
 /* ── component ── */
 const CGPACalculator = () => {
   const navigate = useNavigate();
-  const [tab, setTab] = useState<'sgpa' | 'cgpa'>('sgpa');
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const initialTab = (searchParams.get('tab') as 'sgpa' | 'cgpa') || 'sgpa';
+  const [tab, setTab] = useState<'sgpa' | 'cgpa'>(initialTab);
   const [isExporting, setIsExporting] = useState(false);
   const pdfRef = useRef<HTMLDivElement>(null);
   const profile = store.get('profile', { name: 'Student', course: 'B.Tech', year: 1, semester: 1 }) as UserProfile;
@@ -84,6 +87,13 @@ const CGPACalculator = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const tabParam = new URLSearchParams(location.search).get('tab');
+    if (tabParam === 'sgpa' || tabParam === 'cgpa') {
+      setTab(tabParam);
+    }
+  }, [location.search]);
 
   const showModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
     setModalConfig({ ...config, isOpen: true });

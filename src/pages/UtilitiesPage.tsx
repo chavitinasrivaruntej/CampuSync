@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { Calculator, Clock, BarChart3, CalendarDays, FileText, ChevronRight } from 'lucide-react';
+import { GraduationCap, Clock, BarChart3, CalendarDays, FileText, ChevronRight } from 'lucide-react';
 
 const UTILITIES = [
   {
-    title: 'CGPA / SGPA Calculator',
-    desc: 'Calculate semester and cumulative GPA',
-    icon: Calculator,
+    title: 'GPA Calculator',
+    desc: 'Calculate, analyze, and track your academic performance.',
+    icon: GraduationCap,
     path: '/utilities/cgpa',
     gradient: 'cs-gradient-primary',
   },
