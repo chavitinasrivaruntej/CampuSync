@@ -21,6 +21,7 @@ import GPACalculatorHub from "@/pages/GPACalculatorHub";
 import ComingSoon from "@/pages/ComingSoon";
 import AcademicTrendPage from "@/pages/AcademicTrendPage";
 import SGPAPredictorPage from "@/pages/SGPAPredictorPage";
+import RequiredSGPAPage from "@/pages/RequiredSGPAPage";
 
 import { useEffect } from "react";
 import { store } from "@/lib/store";
@@ -47,7 +48,7 @@ const App = () => {
             <Route path="/utilities/cgpa/calculator" element={<CGPACalculator />} />
             <Route path="/utilities/cgpa/trend" element={<AcademicTrendPage />} />
             <Route path="/utilities/cgpa/predictor" element={<SGPAPredictorPage />} />
-            <Route path="/utilities/cgpa/required" element={<ComingSoon />} />
+            <Route path="/utilities/cgpa/required" element={<RequiredSGPAPage />} />
             <Route path="/utilities/cgpa/history" element={<ComingSoon />} />
             <Route path="/utilities/timetable" element={<TimetablePage />} />
             <Route path="/utilities/attendance" element={<AttendancePage />} />
