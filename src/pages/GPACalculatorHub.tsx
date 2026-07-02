@@ -62,7 +62,7 @@ const GPACalculatorHub = () => {
       iconBg: 'bg-gradient-to-br from-rose-500 to-red-600',
     },
     {
-      title: 'GPA History',
+      title: 'Academic Records',
       desc: 'View previously saved GPA records and reports.',
       icon: FileText,
       path: '/utilities/cgpa/history',

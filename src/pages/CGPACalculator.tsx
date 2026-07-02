@@ -91,11 +91,22 @@ const CGPACalculator = () => {
   }, []);
 
   useEffect(() => {
-    const tabParam = new URLSearchParams(location.search).get('tab');
+    const params = new URLSearchParams(location.search);
+    const tabParam = params.get('tab');
+    const editId = params.get('edit');
+
     if (tabParam === 'sgpa' || tabParam === 'cgpa') {
       setTab(tabParam);
     }
-  }, [location.search]);
+
+    if (editId) {
+      const rec = semesterRecords.find(r => r.id === editId);
+      if (rec) {
+        setActiveRecordId(rec.id);
+        setViewState('edit');
+      }
+    }
+  }, [location.search, semesterRecords]);
 
   const showModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
     setModalConfig({ ...config, isOpen: true });
