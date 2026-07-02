@@ -417,37 +417,40 @@ const CGPACalculator = () => {
     setViewState('edit');
   };
 
-  const getPrefilledSubjectsForSemester = (semNum: number): Subject[] => {
-    if (semNum === 2) {
-      return [
-        { id: crypto.randomUUID(), name: 'Differential Equations and Vector Calculus', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Communicative English Lab', credits: 1, grade: '' },
-        { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry Lab', credits: 1, grade: '' },
-        { id: crypto.randomUUID(), name: 'Health and Wellness, Yoga and Sports', credits: 0.5, grade: '' },
-        { id: crypto.randomUUID(), name: 'Communicative English', credits: 2, grade: '' },
-        { id: crypto.randomUUID(), name: 'Basic Civil and Mechanical Engineering', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Engineering Workshop', credits: 1.5, grade: '' },
-        { id: crypto.randomUUID(), name: 'Data Structures Lab', credits: 1.5, grade: '' },
-        { id: crypto.randomUUID(), name: 'Data Structures', credits: 3, grade: '' },
-      ];
-    }
+  const getPrefilledSubjectsForSemester = (semNum: number, branch: string): Subject[] => {
+    // Only CSE has hardcoded templates for now
+    if (branch.toLowerCase().trim() === 'cse') {
+      if (semNum === 2) {
+        return [
+          { id: crypto.randomUUID(), name: 'Differential Equations and Vector Calculus', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Communicative English Lab', credits: 1, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry Lab', credits: 1, grade: '' },
+          { id: crypto.randomUUID(), name: 'Health and Wellness, Yoga and Sports', credits: 0.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Communicative English', credits: 2, grade: '' },
+          { id: crypto.randomUUID(), name: 'Basic Civil and Mechanical Engineering', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Workshop', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Data Structures Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Data Structures', credits: 3, grade: '' },
+        ];
+      }
 
-    if (semNum === 3) {
-      return [
-        { id: crypto.randomUUID(), name: 'Environmental Science', credits: 0, grade: '' },
-        { id: crypto.randomUUID(), name: 'Discrete Mathematics & Graph Theory', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Managerial Economics and Financial Analysis', credits: 2, grade: '' },
-        { id: crypto.randomUUID(), name: 'Computer Organization and Architecture', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Advanced Data Structures Lab', credits: 1.5, grade: '' },
-        { id: crypto.randomUUID(), name: 'Advanced Data Structures', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java Lab', credits: 1.5, grade: '' },
-        { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Python Programming', credits: 2, grade: '' },
-      ];
+      if (semNum === 3) {
+        return [
+          { id: crypto.randomUUID(), name: 'Environmental Science', credits: 0, grade: '' },
+          { id: crypto.randomUUID(), name: 'Discrete Mathematics & Graph Theory', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Managerial Economics and Financial Analysis', credits: 2, grade: '' },
+          { id: crypto.randomUUID(), name: 'Computer Organization and Architecture', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Advanced Data Structures Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Advanced Data Structures', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Python Programming', credits: 2, grade: '' },
+        ];
+      }
     }
     
-    // Default fallback for other semesters
+    // Default fallback for other semesters or branches (returns 3 empty subjects for manual entry)
     return [newSubject(), newSubject(), newSubject()];
   };
 
@@ -482,7 +485,7 @@ const CGPACalculator = () => {
     
     // Fallback to local hardcoded presets if database request returned nothing
     if (templateSubjects.length === 0) {
-      templateSubjects = getPrefilledSubjectsForSemester(num);
+      templateSubjects = getPrefilledSubjectsForSemester(num, branch);
     }
 
     // Now check if a user record for this semester already exists

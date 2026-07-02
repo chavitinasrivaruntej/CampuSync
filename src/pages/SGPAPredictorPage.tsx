@@ -84,6 +84,7 @@ const SGPAPredictorPage = () => {
   
   // Predictor workspace states
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [hasTemplate, setHasTemplate] = useState(false);
   const [lastSGPA, setLastSGPA] = useState<number | null>(null);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [scenarioName, setScenarioName] = useState('');
@@ -104,42 +105,44 @@ const SGPAPredictorPage = () => {
   }, [scenarios]);
 
   // Fallback preset templates
-  const getPrefilledSubjectsForSemester = (semNum: number): Subject[] => {
-    if (semNum === 2) {
-      return [
-        { id: crypto.randomUUID(), name: 'Differential Equations and Vector Calculus', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Communicative English Lab', credits: 1, grade: '' },
-        { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry Lab', credits: 1, grade: '' },
-        { id: crypto.randomUUID(), name: 'Health and Wellness, Yoga and Sports', credits: 0.5, grade: '' },
-        { id: crypto.randomUUID(), name: 'Communicative English', credits: 2, grade: '' },
-        { id: crypto.randomUUID(), name: 'Basic Civil and Mechanical Engineering', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Engineering Workshop', credits: 1.5, grade: '' },
-        { id: crypto.randomUUID(), name: 'Data Structures Lab', credits: 1.5, grade: '' },
-        { id: crypto.randomUUID(), name: 'Data Structures', credits: 3, grade: '' },
-      ];
-    }
+  const getPrefilledSubjectsForSemester = (semNum: number, branch: string): Subject[] => {
+    // Only CSE has hardcoded templates for now
+    if (branch.toLowerCase().trim() === 'cse') {
+      if (semNum === 2) {
+        return [
+          { id: crypto.randomUUID(), name: 'Differential Equations and Vector Calculus', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Communicative English Lab', credits: 1, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry Lab', credits: 1, grade: '' },
+          { id: crypto.randomUUID(), name: 'Health and Wellness, Yoga and Sports', credits: 0.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Communicative English', credits: 2, grade: '' },
+          { id: crypto.randomUUID(), name: 'Basic Civil and Mechanical Engineering', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Workshop', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Data Structures Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Data Structures', credits: 3, grade: '' },
+        ];
+      }
 
-    if (semNum === 3) {
-      return [
-        { id: crypto.randomUUID(), name: 'Environmental Science', credits: 0, grade: '' },
-        { id: crypto.randomUUID(), name: 'Discrete Mathematics & Graph Theory', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Managerial Economics and Financial Analysis', credits: 2, grade: '' },
-        { id: crypto.randomUUID(), name: 'Computer Organization and Architecture', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Advanced Data Structures Lab', credits: 1.5, grade: '' },
-        { id: crypto.randomUUID(), name: 'Advanced Data Structures', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java Lab', credits: 1.5, grade: '' },
-        { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java', credits: 3, grade: '' },
-        { id: crypto.randomUUID(), name: 'Python Programming', credits: 2, grade: '' },
-      ];
+      if (semNum === 3) {
+        return [
+          { id: crypto.randomUUID(), name: 'Environmental Science', credits: 0, grade: '' },
+          { id: crypto.randomUUID(), name: 'Discrete Mathematics & Graph Theory', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Managerial Economics and Financial Analysis', credits: 2, grade: '' },
+          { id: crypto.randomUUID(), name: 'Computer Organization and Architecture', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Advanced Data Structures Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Advanced Data Structures', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Python Programming', credits: 2, grade: '' },
+        ];
+      }
     }
     
+    // Default fallback for other semesters (returns 3 empty subjects for manual entry)
     return [
       { id: crypto.randomUUID(), name: 'Theory Core Course 1', credits: 3, grade: '' },
       { id: crypto.randomUUID(), name: 'Theory Core Course 2', credits: 3, grade: '' },
-      { id: crypto.randomUUID(), name: 'Elective Course 1', credits: 3, grade: '' },
       { id: crypto.randomUUID(), name: 'Core Laboratory 1', credits: 1.5, grade: '' },
-      { id: crypto.randomUUID(), name: 'Core Laboratory 2', credits: 1.5, grade: '' },
     ];
   };
 
@@ -153,6 +156,7 @@ const SGPAPredictorPage = () => {
     const branch = profile.className || 'CSE';
     
     let templateSubjects: Subject[] = [];
+    let templateLoaded = false;
     
     try {
       const { data: dbTemplates } = await supabase
@@ -170,16 +174,22 @@ const SGPAPredictorPage = () => {
           credits: parseFloat(t.credits),
           grade: '',
         }));
+        templateLoaded = true;
       }
     } catch (err) {
       console.warn('Error fetching template from Supabase, falling back to local presets', err);
     }
     
     if (templateSubjects.length === 0) {
-      templateSubjects = getPrefilledSubjectsForSemester(num);
+      templateSubjects = getPrefilledSubjectsForSemester(num, branch);
+      // Local preset templates are only for CSE sem 2 and 3
+      if (branch.toLowerCase().trim() === 'cse' && (num === 2 || num === 3)) {
+        templateLoaded = true;
+      }
     }
 
     setSubjects(templateSubjects);
+    setHasTemplate(templateLoaded);
     setIsLoadingTemplate(false);
     setViewState('predict');
     topRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -220,6 +230,35 @@ const SGPAPredictorPage = () => {
     }
     const updated = [...subjects];
     updated[index].grade = newGrade;
+    setSubjects(updated);
+  };
+
+  const addSubject = () => {
+    setSubjects([...subjects, {
+      id: crypto.randomUUID(),
+      name: '',
+      credits: 3,
+      grade: ''
+    }]);
+  };
+
+  const removeSubject = (index: number) => {
+    if (subjects.length > 1) {
+      if (currentSGPA > 0) setLastSGPA(currentSGPA);
+      setSubjects(subjects.filter((_, idx) => idx !== index));
+    }
+  };
+
+  const updateSubjectName = (index: number, name: string) => {
+    const updated = [...subjects];
+    updated[index].name = name;
+    setSubjects(updated);
+  };
+
+  const updateSubjectCredits = (index: number, credits: number) => {
+    if (currentSGPA > 0) setLastSGPA(currentSGPA);
+    const updated = [...subjects];
+    updated[index].credits = credits;
     setSubjects(updated);
   };
 
@@ -517,13 +556,51 @@ const SGPAPredictorPage = () => {
               {subjects.map((sub, i) => (
                 <div key={sub.id} className="cs-card p-3.5 border-l-4 border-l-amber-500/40 relative">
                   <div className="flex items-start justify-between gap-4 mb-2">
-                    <div className="min-w-0">
-                      <h4 className="font-bold text-xs text-foreground line-clamp-2 leading-relaxed">
-                        {sub.name || `Subject ${i + 1}`}
-                      </h4>
-                      <p className="text-[9px] text-muted-foreground font-semibold mt-0.5 uppercase tracking-wider">
-                        {sub.credits} Credits • {calculatePotentialGain(i)}
-                      </p>
+                    <div className="min-w-0 flex-1">
+                      {hasTemplate ? (
+                        <>
+                          <h4 className="font-bold text-xs text-foreground line-clamp-2 leading-relaxed">
+                            {sub.name || `Subject ${i + 1}`}
+                          </h4>
+                          <p className="text-[9px] text-muted-foreground font-semibold mt-0.5 uppercase tracking-wider">
+                            {sub.credits} Credits • {calculatePotentialGain(i)}
+                          </p>
+                        </>
+                      ) : (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              placeholder="Subject name"
+                              value={sub.name}
+                              onChange={(e) => updateSubjectName(i, e.target.value)}
+                              className="flex-1 bg-secondary border-none rounded-lg px-3 py-2 text-xs font-semibold outline-none focus:ring-1 focus:ring-amber-500/30 placeholder:text-muted-foreground/50"
+                            />
+                            {subjects.length > 1 && (
+                              <button
+                                onClick={() => removeSubject(i)}
+                                className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors shrink-0"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <select
+                              value={sub.credits}
+                              onChange={(e) => updateSubjectCredits(i, parseFloat(e.target.value))}
+                              className="bg-secondary border-none rounded-lg px-2.5 py-1 text-[10px] font-semibold outline-none focus:ring-1 focus:ring-amber-500/30"
+                            >
+                              {[0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5].map(c => (
+                                <option key={c} value={c}>{c} Credits</option>
+                              ))}
+                            </select>
+                            <span className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider">
+                              • {calculatePotentialGain(i)}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -551,6 +628,15 @@ const SGPAPredictorPage = () => {
                   </div>
                 </div>
               ))}
+
+              {!hasTemplate && (
+                <button
+                  onClick={addSubject}
+                  className="w-full py-3 rounded-xl border border-dashed border-primary/20 hover:border-primary/40 text-primary text-xs font-bold transition-all flex items-center justify-center gap-1.5 bg-primary/5 hover:bg-primary/10 mt-3 active:scale-[0.98]"
+                >
+                  <Plus className="w-4 h-4" /> Add Subject to Simulation
+                </button>
+              )}
             </div>
           </div>
 
