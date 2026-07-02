@@ -145,3 +145,17 @@ INSERT INTO public.semester_templates (regulation, branch, semester, subject_nam
 ('R23', 'CSE', 3, 'Object Oriented Programming Through Java', 3),
 ('R23', 'CSE', 3, 'Python Programming', 2)
 ON CONFLICT DO NOTHING;
+
+-- Seed Semester 5 Templates (R23 CSE)
+INSERT INTO public.semester_templates (regulation, branch, semester, subject_name, credits) VALUES
+('R23', 'CSE', 5, 'Community Service Internship', 2),
+('R23', 'CSE', 5, 'Data Mining Lab', 1.5),
+('R23', 'CSE', 5, 'Data Warehousing and Data Mining', 3),
+('R23', 'CSE', 5, 'Computer Networks Lab', 1.5),
+('R23', 'CSE', 5, 'Computer Networks', 3),
+('R23', 'CSE', 5, 'Formal Languages and Automata Theory', 3),
+('R23', 'CSE', 5, 'Design and Analysis of Algorithms', 3),
+('R23', 'CSE', 5, 'User Interface Design Using Flutter', 1),
+('R23', 'CSE', 5, 'Construction and Technology Management', 3),
+('R23', 'CSE', 5, 'Full Stack Development – 2', 2)
+ON CONFLICT DO NOTHING;

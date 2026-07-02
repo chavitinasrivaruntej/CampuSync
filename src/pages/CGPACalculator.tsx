@@ -448,6 +448,21 @@ const CGPACalculator = () => {
           { id: crypto.randomUUID(), name: 'Python Programming', credits: 2, grade: '' },
         ];
       }
+
+      if (semNum === 5) {
+        return [
+          { id: crypto.randomUUID(), name: 'Community Service Internship', credits: 2, grade: '' },
+          { id: crypto.randomUUID(), name: 'Data Mining Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Data Warehousing and Data Mining', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Computer Networks Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Computer Networks', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Formal Languages and Automata Theory', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Design and Analysis of Algorithms', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'User Interface Design Using Flutter', credits: 1, grade: '' },
+          { id: crypto.randomUUID(), name: 'Construction and Technology Management', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Full Stack Development – 2', credits: 2, grade: '' },
+        ];
+      }
     }
     
     // Default fallback for other semesters or branches (returns 3 empty subjects for manual entry)
