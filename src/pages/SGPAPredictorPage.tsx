@@ -108,6 +108,23 @@ const SGPAPredictorPage = () => {
   const getPrefilledSubjectsForSemester = (semNum: number, branch: string): Subject[] => {
     const branchKey = branch.toLowerCase().trim();
     
+    if (branchKey === 'cse' || branchKey === 'aiml') {
+      if (semNum === 1) {
+        return [
+          { id: crypto.randomUUID(), name: 'Engineering Physics', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Linear Algebra & Calculus', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Basic Electrical & Electronics Engineering', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Graphics', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Introduction to Programming', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'IT Workshop', credits: 1, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Physics Lab', credits: 1, grade: '' },
+          { id: crypto.randomUUID(), name: 'Electrical & Electronics Engineering Workshop', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Computer Programming Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'NSS / NCC / Scouts & Guides / Community Service', credits: 0.5, grade: '' },
+        ];
+      }
+    }
+    
     if (branchKey === 'cse') {
       if (semNum === 2) {
         return [
@@ -257,8 +274,8 @@ const SGPAPredictorPage = () => {
     if (templateSubjects.length === 0) {
       templateSubjects = getPrefilledSubjectsForSemester(num, branch);
       const branchKey = branch.toLowerCase().trim();
-      // Local preset templates are for CSE sem 2, 3, 4, 5 and AIML sem 2, 3, 5
-      if ((branchKey === 'cse' && (num === 2 || num === 3 || num === 4 || num === 5)) || (branchKey === 'aiml' && (num === 2 || num === 3 || num === 5))) {
+      // Local preset templates are for CSE sem 1, 2, 3, 4, 5 and AIML sem 1, 2, 3, 5
+      if ((branchKey === 'cse' && (num === 1 || num === 2 || num === 3 || num === 4 || num === 5)) || (branchKey === 'aiml' && (num === 1 || num === 2 || num === 3 || num === 5))) {
         templateLoaded = true;
       }
     }

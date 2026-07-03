@@ -213,3 +213,31 @@ INSERT INTO public.semester_templates (regulation, branch, semester, subject_nam
 ('R23', 'CSE', 4, 'Full Stack Development – I', 2),
 ('R23', 'CSE', 4, 'Design Thinking & Innovation', 2)
 ON CONFLICT DO NOTHING;
+
+-- Seed Semester 1 Templates (R23 CSE)
+INSERT INTO public.semester_templates (regulation, branch, semester, subject_name, credits) VALUES
+('R23', 'CSE', 1, 'Engineering Physics', 3),
+('R23', 'CSE', 1, 'Linear Algebra & Calculus', 3),
+('R23', 'CSE', 1, 'Basic Electrical & Electronics Engineering', 3),
+('R23', 'CSE', 1, 'Engineering Graphics', 3),
+('R23', 'CSE', 1, 'Introduction to Programming', 3),
+('R23', 'CSE', 1, 'IT Workshop', 1),
+('R23', 'CSE', 1, 'Engineering Physics Lab', 1),
+('R23', 'CSE', 1, 'Electrical & Electronics Engineering Workshop', 1.5),
+('R23', 'CSE', 1, 'Computer Programming Lab', 1.5),
+('R23', 'CSE', 1, 'NSS / NCC / Scouts & Guides / Community Service', 0.5)
+ON CONFLICT DO NOTHING;
+
+-- Seed Semester 1 Templates (R23 AIML)
+INSERT INTO public.semester_templates (regulation, branch, semester, subject_name, credits) VALUES
+('R23', 'AIML', 1, 'Engineering Physics', 3),
+('R23', 'AIML', 1, 'Linear Algebra & Calculus', 3),
+('R23', 'AIML', 1, 'Basic Electrical & Electronics Engineering', 3),
+('R23', 'AIML', 1, 'Engineering Graphics', 3),
+('R23', 'AIML', 1, 'Introduction to Programming', 3),
+('R23', 'AIML', 1, 'IT Workshop', 1),
+('R23', 'AIML', 1, 'Engineering Physics Lab', 1),
+('R23', 'AIML', 1, 'Electrical & Electronics Engineering Workshop', 1.5),
+('R23', 'AIML', 1, 'Computer Programming Lab', 1.5),
+('R23', 'AIML', 1, 'NSS / NCC / Scouts & Guides / Community Service', 0.5)
+ON CONFLICT DO NOTHING;
