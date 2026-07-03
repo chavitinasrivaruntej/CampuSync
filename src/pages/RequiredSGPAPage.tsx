@@ -135,7 +135,7 @@ const RequiredSGPAPage = () => {
       <div className="flex flex-col gap-1 mb-6">
         <h1 className="text-xl font-bold text-foreground">Required SGPA</h1>
         <p className="text-xs text-muted-foreground">
-          Determine the average grade points you need in future terms to hit your target CGPA.
+          Determine the average grade points you need in future semesters to hit your target CGPA.
         </p>
       </div>
 
@@ -157,46 +157,55 @@ const RequiredSGPAPage = () => {
           </div>
 
           <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="bg-secondary/30 border border-border/30 rounded-xl p-3">
+            <div className="bg-secondary/30 border border-border/30 rounded-xl p-3 flex flex-col justify-between min-h-[96px]">
               <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider block">Current CGPA</span>
               {isManualMode ? (
                 <input
                   type="number"
-                  min="0"
-                  max="10"
+                  inputMode="decimal"
+                  min="0.00"
+                  max="10.00"
                   step="0.01"
                   value={manualCGPA}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value);
-                    if (!isNaN(val)) setManualCGPA(Math.min(10.0, Math.max(0, val)));
+                    if (!isNaN(val)) {
+                      setManualCGPA(val);
+                    } else if (e.target.value === '') {
+                      setManualCGPA(0);
+                    }
                   }}
-                  className="w-full bg-secondary border-none rounded-lg mt-1 py-1 px-1.5 text-center text-xs font-black outline-none focus:ring-1 focus:ring-primary/20 text-foreground"
+                  onBlur={() => {
+                    const clamped = Math.min(10.0, Math.max(0, manualCGPA));
+                    setManualCGPA(parseFloat(clamped.toFixed(2)));
+                  }}
+                  className="w-full bg-secondary border border-border rounded-xl mt-1.5 py-1.5 px-2 text-center text-xs font-black outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary text-foreground transition-all"
                 />
               ) : (
-                <span className="text-sm font-black text-foreground block mt-1">{currentCGPA.toFixed(2)}</span>
+                <span className="text-sm font-black text-foreground block mt-1.5 py-1.5">{currentCGPA.toFixed(2)}</span>
               )}
             </div>
 
-            <div className="bg-secondary/30 border border-border/30 rounded-xl p-3">
-              <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider block">Completed Terms</span>
+            <div className="bg-secondary/30 border border-border/30 rounded-xl p-3 flex flex-col justify-between min-h-[96px]">
+              <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider block">Completed Semesters</span>
               {isManualMode ? (
                 <select
                   value={manualCompleted}
                   onChange={(e) => setManualCompleted(parseInt(e.target.value))}
-                  className="w-full bg-secondary border-none rounded-lg mt-1 py-1 px-1 text-center text-xs font-semibold outline-none focus:ring-1 focus:ring-primary/20 text-foreground"
+                  className="w-full bg-secondary border border-border rounded-xl mt-1.5 py-1.5 px-2 text-center text-xs font-bold outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary text-foreground transition-all"
                 >
                   {[1, 2, 3, 4, 5, 6, 7].map(n => (
                     <option key={n} value={n}>{n}</option>
                   ))}
                 </select>
               ) : (
-                <span className="text-sm font-black text-foreground block mt-1">{completedSemesters} / 8</span>
+                <span className="text-sm font-black text-foreground block mt-1.5 py-1.5">{completedSemesters}</span>
               )}
             </div>
 
-            <div className="bg-secondary/30 border border-border/30 rounded-xl p-3 flex flex-col justify-center">
-              <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider block">Remaining Terms</span>
-              <span className="text-sm font-black text-foreground block mt-1">{remainingSemesters}</span>
+            <div className="bg-secondary/30 border border-border/30 rounded-xl p-3 flex flex-col justify-between min-h-[96px]">
+              <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider block">Remaining Semesters</span>
+              <span className="text-sm font-black text-foreground block mt-1.5 py-1.5">{remainingSemesters}</span>
             </div>
           </div>
         </div>
