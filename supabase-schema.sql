@@ -159,3 +159,57 @@ INSERT INTO public.semester_templates (regulation, branch, semester, subject_nam
 ('R23', 'CSE', 5, 'Construction and Technology Management', 3),
 ('R23', 'CSE', 5, 'Full Stack Development – 2', 2)
 ON CONFLICT DO NOTHING;
+
+-- Seed Semester 2 Templates (R23 AIML)
+INSERT INTO public.semester_templates (regulation, branch, semester, subject_name, credits) VALUES
+('R23', 'AIML', 2, 'Differential Equations and Vector Calculus', 3),
+('R23', 'AIML', 2, 'Engineering Chemistry / Chemistry / Fundamental Chemistry', 3),
+('R23', 'AIML', 2, 'Communicative English Lab', 1),
+('R23', 'AIML', 2, 'Engineering Chemistry / Chemistry / Fundamental Chemistry Lab', 1),
+('R23', 'AIML', 2, 'Health and Wellness, Yoga and Sports', 0.5),
+('R23', 'AIML', 2, 'Communicative English', 2),
+('R23', 'AIML', 2, 'Basic Civil and Mechanical Engineering', 3),
+('R23', 'AIML', 2, 'Engineering Workshop', 1.5),
+('R23', 'AIML', 2, 'Data Structures Lab', 1.5),
+('R23', 'AIML', 2, 'Data Structures', 3)
+ON CONFLICT DO NOTHING;
+
+-- Seed Semester 3 Templates (R23 AIML)
+INSERT INTO public.semester_templates (regulation, branch, semester, subject_name, credits) VALUES
+('R23', 'AIML', 3, 'Universal Human Values – Understanding Harmony', 3),
+('R23', 'AIML', 3, 'Environmental Science', 0),
+('R23', 'AIML', 3, 'Discrete Mathematics & Graph Theory', 3),
+('R23', 'AIML', 3, 'Advanced Data Structures Lab', 1.5),
+('R23', 'AIML', 3, 'Advanced Data Structures', 3),
+('R23', 'AIML', 3, 'Object Oriented Programming Through Java Lab', 1.5),
+('R23', 'AIML', 3, 'Object Oriented Programming Through Java', 3),
+('R23', 'AIML', 3, 'Artificial Intelligence', 3),
+('R23', 'AIML', 3, 'Python Programming', 2)
+ON CONFLICT DO NOTHING;
+
+-- Seed Semester 5 Templates (R23 AIML)
+INSERT INTO public.semester_templates (regulation, branch, semester, subject_name, credits) VALUES
+('R23', 'AIML', 5, 'Community Service Internship', 2),
+('R23', 'AIML', 5, 'Information Retrieval Lab', 1.5),
+('R23', 'AIML', 5, 'Information Retrieval Systems', 3),
+('R23', 'AIML', 5, 'Computer Networks Lab', 1.5),
+('R23', 'AIML', 5, 'Computer Networks', 3),
+('R23', 'AIML', 5, 'Operating Systems', 3),
+('R23', 'AIML', 5, 'Automata Theory and Compiler Design', 3),
+('R23', 'AIML', 5, 'User Interface Design Using Flutter', 1),
+('R23', 'AIML', 5, 'Construction and Technology Management', 3),
+('R23', 'AIML', 5, 'Full Stack Development – 2', 2)
+ON CONFLICT DO NOTHING;
+
+-- Seed Semester 4 Templates (R23 CSE)
+INSERT INTO public.semester_templates (regulation, branch, semester, subject_name, credits) VALUES
+('R23', 'CSE', 4, 'Universal Human Values – Understanding Harmony', 3),
+('R23', 'CSE', 4, 'Probability & Statistics', 3),
+('R23', 'CSE', 4, 'Operating Systems', 3),
+('R23', 'CSE', 4, 'Database Management Systems', 3),
+('R23', 'CSE', 4, 'Software Engineering', 3),
+('R23', 'CSE', 4, 'Operating Systems Lab', 1.5),
+('R23', 'CSE', 4, 'Database Management Systems Lab', 1.5),
+('R23', 'CSE', 4, 'Full Stack Development – I', 2),
+('R23', 'CSE', 4, 'Design Thinking & Innovation', 2)
+ON CONFLICT DO NOTHING;

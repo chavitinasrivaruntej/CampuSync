@@ -106,8 +106,9 @@ const SGPAPredictorPage = () => {
 
   // Fallback preset templates
   const getPrefilledSubjectsForSemester = (semNum: number, branch: string): Subject[] => {
-    // Only CSE has hardcoded templates for now
-    if (branch.toLowerCase().trim() === 'cse') {
+    const branchKey = branch.toLowerCase().trim();
+    
+    if (branchKey === 'cse') {
       if (semNum === 2) {
         return [
           { id: crypto.randomUUID(), name: 'Differential Equations and Vector Calculus', credits: 3, grade: '' },
@@ -137,6 +138,20 @@ const SGPAPredictorPage = () => {
         ];
       }
 
+      if (semNum === 4) {
+        return [
+          { id: crypto.randomUUID(), name: 'Universal Human Values – Understanding Harmony', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Probability & Statistics', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Operating Systems', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Database Management Systems', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Software Engineering', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Operating Systems Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Database Management Systems Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Full Stack Development – I', credits: 2, grade: '' },
+          { id: crypto.randomUUID(), name: 'Design Thinking & Innovation', credits: 2, grade: '' },
+        ];
+      }
+
       if (semNum === 5) {
         return [
           { id: crypto.randomUUID(), name: 'Community Service Internship', credits: 2, grade: '' },
@@ -146,6 +161,50 @@ const SGPAPredictorPage = () => {
           { id: crypto.randomUUID(), name: 'Computer Networks', credits: 3, grade: '' },
           { id: crypto.randomUUID(), name: 'Formal Languages and Automata Theory', credits: 3, grade: '' },
           { id: crypto.randomUUID(), name: 'Design and Analysis of Algorithms', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'User Interface Design Using Flutter', credits: 1, grade: '' },
+          { id: crypto.randomUUID(), name: 'Construction and Technology Management', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Full Stack Development – 2', credits: 2, grade: '' },
+        ];
+      }
+    } else if (branchKey === 'aiml') {
+      if (semNum === 2) {
+        return [
+          { id: crypto.randomUUID(), name: 'Differential Equations and Vector Calculus', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Communicative English Lab', credits: 1, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Chemistry / Chemistry / Fundamental Chemistry Lab', credits: 1, grade: '' },
+          { id: crypto.randomUUID(), name: 'Health and Wellness, Yoga and Sports', credits: 0.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Communicative English', credits: 2, grade: '' },
+          { id: crypto.randomUUID(), name: 'Basic Civil and Mechanical Engineering', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Engineering Workshop', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Data Structures Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Data Structures', credits: 3, grade: '' },
+        ];
+      }
+
+      if (semNum === 3) {
+        return [
+          { id: crypto.randomUUID(), name: 'Universal Human Values – Understanding Harmony', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Environmental Science', credits: 0, grade: '' },
+          { id: crypto.randomUUID(), name: 'Discrete Mathematics & Graph Theory', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Advanced Data Structures Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Advanced Data Structures', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Object Oriented Programming Through Java', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Artificial Intelligence', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Python Programming', credits: 2, grade: '' },
+        ];
+      }
+
+      if (semNum === 5) {
+        return [
+          { id: crypto.randomUUID(), name: 'Community Service Internship', credits: 2, grade: '' },
+          { id: crypto.randomUUID(), name: 'Information Retrieval Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Information Retrieval Systems', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Computer Networks Lab', credits: 1.5, grade: '' },
+          { id: crypto.randomUUID(), name: 'Computer Networks', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Operating Systems', credits: 3, grade: '' },
+          { id: crypto.randomUUID(), name: 'Automata Theory and Compiler Design', credits: 3, grade: '' },
           { id: crypto.randomUUID(), name: 'User Interface Design Using Flutter', credits: 1, grade: '' },
           { id: crypto.randomUUID(), name: 'Construction and Technology Management', credits: 3, grade: '' },
           { id: crypto.randomUUID(), name: 'Full Stack Development – 2', credits: 2, grade: '' },
@@ -197,8 +256,9 @@ const SGPAPredictorPage = () => {
     
     if (templateSubjects.length === 0) {
       templateSubjects = getPrefilledSubjectsForSemester(num, branch);
-      // Local preset templates are only for CSE sem 2, 3, and 5
-      if (branch.toLowerCase().trim() === 'cse' && (num === 2 || num === 3 || num === 5)) {
+      const branchKey = branch.toLowerCase().trim();
+      // Local preset templates are for CSE sem 2, 3, 4, 5 and AIML sem 2, 3, 5
+      if ((branchKey === 'cse' && (num === 2 || num === 3 || num === 4 || num === 5)) || (branchKey === 'aiml' && (num === 2 || num === 3 || num === 5))) {
         templateLoaded = true;
       }
     }
