@@ -62,7 +62,7 @@ const HomePage = () => {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className="flex flex-col items-center gap-3 active:scale-95 transition-transform"
+              className="flex flex-col items-center gap-3 cs-interactive-btn focus:outline-none"
             >
               <div className={`w-[60px] h-[60px] rounded-2xl ${gradient} flex items-center justify-center shadow-sm`}>
                 <Icon className="w-7 h-7 text-primary-foreground" />
@@ -72,19 +72,19 @@ const HomePage = () => {
           ))}
         </div>
       </section>
-
+ 
       {/* Today's Classes */}
       <section className="mb-7">
         <div className="flex items-center justify-between mb-3">
           <p className="cs-section-title">Today's Classes</p>
-          <button onClick={() => navigate('/utilities/timetable')} className="text-xs text-primary font-semibold">
+          <button onClick={() => navigate('/utilities/timetable')} className="text-xs text-primary font-semibold cs-interactive-btn focus:outline-none">
             View All
           </button>
         </div>
         {todayClasses.length > 0 ? (
           <div className="space-y-3">
             {todayClasses.map((entry) => (
-              <div key={entry.id} className="cs-card-elevated p-4 flex items-center gap-3">
+              <div key={entry.id} className="cs-card-elevated p-4 flex items-center gap-3 cs-interactive-card">
                 <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <Clock className="w-5 h-5 text-primary" />
                 </div>
@@ -101,24 +101,24 @@ const HomePage = () => {
               <CalendarX className="w-6 h-6 text-muted-foreground/60" />
             </div>
             <p className="text-sm font-medium text-muted-foreground">No classes scheduled for today</p>
-            <button onClick={() => navigate('/utilities/timetable')} className="text-[13px] text-primary font-semibold mt-2 hover:underline">
+            <button onClick={() => navigate('/utilities/timetable')} className="text-[13px] text-primary font-semibold mt-2 hover:underline cs-interactive-btn focus:outline-none">
               Set up timetable &rarr;
             </button>
           </div>
         )}
       </section>
-
+ 
       {/* Upcoming Academic Dates */}
       <section className="mb-7">
         <div className="flex items-center justify-between mb-3">
           <p className="cs-section-title">Upcoming Dates</p>
-          <button onClick={() => navigate('/utilities/calendar')} className="text-xs text-primary font-semibold">
+          <button onClick={() => navigate('/utilities/calendar')} className="text-xs text-primary font-semibold cs-interactive-btn focus:outline-none">
             Calendar
           </button>
         </div>
         <div className="space-y-3">
           {upcomingDates.map((event) => (
-            <div key={event.id} className="cs-card-elevated p-5 flex items-center gap-4">
+            <div key={event.id} className="cs-card-elevated p-5 flex items-center gap-4 cs-interactive-card">
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
                 event.type === 'holiday' ? 'bg-accent/10' : 
                 event.type === 'semester' ? 'bg-destructive/10' : 'bg-primary/10'
@@ -139,14 +139,14 @@ const HomePage = () => {
           ))}
         </div>
       </section>
-
+ 
       {/* Latest Announcement */}
       {latestAnnouncement && (
         <section className="mb-6">
           <p className="cs-section-title mb-3">Latest Announcement</p>
           <button
             onClick={() => navigate('/announcements')}
-            className="cs-card-elevated p-5 w-full text-left active:scale-[0.98] transition-transform group"
+            className="cs-card-elevated p-5 w-full text-left group cs-interactive-card"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">

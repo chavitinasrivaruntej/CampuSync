@@ -102,7 +102,7 @@ const SettingsPage = () => {
               <button
                 key={mode}
                 onClick={() => updateTheme(mode)}
-                className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border transition-all duration-200 ${
+                className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border transition-all duration-200 cs-interactive-btn ${
                   theme === mode
                     ? 'border-primary bg-primary/10 text-primary'
                     : 'border-border bg-secondary/50 text-muted-foreground'
@@ -114,19 +114,19 @@ const SettingsPage = () => {
             ))}
           </div>
         </SettingsSection>
-
+ 
         {/* ─── Reminder Timing ─── */}
         <SettingsSection icon={Clock} title="Reminder Timing">
           <SelectRow label="Before deadline" value={reminder.timing} options={REMINDER_OPTIONS} onChange={updateReminder} />
         </SettingsSection>
-
+ 
         {/* ─── Data Management ─── */}
         <SettingsSection icon={Trash2} title="Data Management">
           <ResetRow label="Reset Timetable" onReset={() => resetData('timetable', 'Timetable')} />
           <ResetRow label="Reset Attendance Data" onReset={() => resetData('attendance', 'Attendance')} />
           <ResetRow label="Reset CGPA / SGPA" onReset={() => resetData('semesters', 'CGPA/SGPA')} />
         </SettingsSection>
-
+ 
         {/* ─── Feedback ─── */}
         <SettingsSection icon={MessageSquare} title="Feedback">
           <Textarea
@@ -137,7 +137,7 @@ const SettingsPage = () => {
           />
           <button
             onClick={submitFeedback}
-            className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold transition-colors hover:bg-primary/90"
+            className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold transition-colors hover:bg-primary/90 cs-interactive-btn"
           >
             <Send className="w-4 h-4" />
             Submit Feedback
@@ -207,7 +207,7 @@ function SelectRow({ label, value, options, onChange }: { label: string; value: 
 
 function ResetRow({ label, onReset }: { label: string; onReset: () => void }) {
   return (
-    <button onClick={onReset} className="w-full flex items-center justify-between py-2 group">
+    <button onClick={onReset} className="w-full flex items-center justify-between py-2 px-2.5 rounded-xl group cs-interactive-list-item">
       <div className="flex items-center gap-2.5">
         <RotateCcw className="w-4 h-4 text-destructive/70" />
         <span className="text-sm font-medium text-foreground">{label}</span>

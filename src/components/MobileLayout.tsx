@@ -36,19 +36,17 @@ const MobileLayout = () => {
               <button
                 key={path}
                 onClick={() => navigate(path)}
-                className={`flex flex-col items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-200 active:scale-90 ${
+                className={`flex flex-col items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-200 focus:outline-none relative ${
                   active
                     ? 'text-primary'
-                    : 'text-muted-foreground/60'
+                    : 'text-muted-foreground/60 hover:text-muted-foreground/90'
                 }`}
               >
-                <div className="relative">
-                  {active && (
-                    <div className="absolute -inset-1.5 rounded-xl bg-primary/10" />
-                  )}
-                  <Icon className={`relative w-[22px] h-[22px] ${active ? 'stroke-[2.5]' : 'stroke-[1.5]'}`} />
+                <div className="relative transition-transform duration-300 ease-out" style={{ transform: active ? 'scale(1.08)' : 'scale(1)' }}>
+                  <div className={`absolute -inset-1.5 rounded-xl bg-primary/10 transition-all duration-300 ease-out ${active ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} />
+                  <Icon className={`relative w-[22px] h-[22px] transition-all duration-300 ease-out ${active ? 'stroke-[2.5] text-primary' : 'stroke-[1.5]'}`} />
                 </div>
-                <span className={`text-[10px] ${active ? 'font-bold' : 'font-medium'}`}>
+                <span className={`text-[10px] transition-all duration-300 ease-out ${active ? 'font-bold scale-105' : 'font-medium'}`}>
                   {label}
                 </span>
               </button>

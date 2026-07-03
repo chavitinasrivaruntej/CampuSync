@@ -52,7 +52,7 @@ const UtilitiesPage = () => {
           <button
             key={path}
             onClick={() => navigate(path)}
-            className="cs-card-elevated p-4 w-full flex items-center gap-4 active:scale-[0.98] transition-transform"
+            className="cs-card-elevated p-4 w-full flex items-center gap-4 cs-interactive-card"
           >
             <div className={`w-12 h-12 rounded-2xl ${gradient} flex items-center justify-center flex-shrink-0`}>
               <Icon className="w-6 h-6 text-primary-foreground" />

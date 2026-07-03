@@ -94,7 +94,7 @@ const GPACalculatorHub = () => {
           <button
             key={idx}
             onClick={() => navigate(tool.path + (tool.search || ''))}
-            className={`flex flex-col text-left p-5 rounded-2xl border bg-gradient-to-br ${tool.gradient} ${tool.borderClass} shadow-sm transition-all duration-300 hover:-translate-y-1 active:scale-[0.98] group`}
+            className={`flex flex-col text-left p-5 rounded-2xl border bg-gradient-to-br ${tool.gradient} ${tool.borderClass} shadow-sm cs-interactive-card group`}
           >
             <div className="flex items-center justify-between w-full mb-4">
               <div className={`w-12 h-12 rounded-2xl ${tool.iconBg} flex items-center justify-center text-white shadow-md transition-transform duration-300 group-hover:scale-110`}>
