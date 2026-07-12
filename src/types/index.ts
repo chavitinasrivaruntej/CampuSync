@@ -39,6 +39,8 @@ export interface AttendanceRecord {
   subject: string;
   totalClasses: number;
   attendedClasses: number;
+  isPinned?: boolean;
+  subjectType?: 'Theory' | 'Lab' | 'Elective' | 'Honors' | 'Minor';
 }
 
 export interface CalendarEvent {

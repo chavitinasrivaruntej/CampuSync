@@ -11,7 +11,7 @@ const UTILITIES = [
   },
   {
     title: 'Timetable',
-    desc: 'Set up and view your class schedule',
+    desc: 'Browse and access official semester timetables',
     icon: Clock,
     path: '/utilities/timetable',
     gradient: 'cs-gradient-accent',
@@ -24,8 +24,8 @@ const UTILITIES = [
     gradient: 'cs-gradient-warm',
   },
   {
-    title: 'Academic Calendar',
-    desc: 'Exams, holidays, and important dates',
+    title: 'Academic Repository',
+    desc: 'Official syllabus, calendars, and holidays',
     icon: CalendarDays,
     path: '/utilities/calendar',
     gradient: 'cs-gradient-primary',
