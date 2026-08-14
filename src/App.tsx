@@ -1,0 +1,91 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { NotificationManager } from "@/components/NotificationManager";
+import ScrollToTop from "@/components/ScrollToTop";
+import MobileLayout from "@/components/MobileLayout";
+import HomePage from "@/pages/HomePage";
+import UtilitiesPage from "@/pages/UtilitiesPage";
+import CGPACalculator from "@/pages/CGPACalculator";
+import TimetablePage from "@/pages/TimetablePage";
+import AttendancePage from "@/pages/AttendancePage";
+import CalendarPage from "@/pages/CalendarPage";
+import AssignmentsPage from "@/pages/AssignmentsPage";
+import AnnouncementsPage from "@/pages/AnnouncementsPage";
+import EventsPage from "@/pages/EventsPage";
+import ProfilePage from "@/pages/ProfilePage";
+import SettingsPage from "@/pages/SettingsPage";
+import NotFound from "@/pages/NotFound";
+import GPACalculatorHub from "@/pages/GPACalculatorHub";
+import ComingSoon from "@/pages/ComingSoon";
+import AcademicTrendPage from "@/pages/AcademicTrendPage";
+import SGPAPredictorPage from "@/pages/SGPAPredictorPage";
+import RequiredSGPAPage from "@/pages/RequiredSGPAPage";
+import AcademicRecordsPage from "@/pages/AcademicRecordsPage";
+import AuthPage from "@/pages/AuthPage";
+
+import { useEffect } from "react";
+import { store } from "@/lib/store";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
+const queryClient = new QueryClient();
+
+const App = () => {
+  useEffect(() => {
+    store.pullFromSupabase().catch(console.error);
+    const unsubscribe = store.subscribeToRealtime();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <NotificationManager />
+          <ScrollToTop />
+          <Routes>
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/login" element={<AuthPage />} />
+            
+            {/* Protected Student Routes */}
+            <Route element={<ProtectedRoute><MobileLayout /></ProtectedRoute>}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/dashboard" element={<HomePage />} />
+              <Route path="/utilities" element={<UtilitiesPage />} />
+              <Route path="/gpa" element={<GPACalculatorHub />} />
+              <Route path="/utilities/cgpa" element={<GPACalculatorHub />} />
+              <Route path="/utilities/cgpa/calculator" element={<CGPACalculator />} />
+              <Route path="/utilities/cgpa/trend" element={<AcademicTrendPage />} />
+              <Route path="/utilities/cgpa/predictor" element={<SGPAPredictorPage />} />
+              <Route path="/utilities/cgpa/required" element={<RequiredSGPAPage />} />
+              <Route path="/utilities/cgpa/history" element={<AcademicRecordsPage />} />
+              <Route path="/timetable" element={<TimetablePage />} />
+              <Route path="/utilities/timetable" element={<TimetablePage />} />
+              <Route path="/attendance" element={<AttendancePage />} />
+              <Route path="/utilities/attendance" element={<AttendancePage />} />
+              <Route path="/academic-calendar" element={<CalendarPage />} />
+              <Route path="/utilities/calendar" element={<CalendarPage />} />
+              <Route path="/utilities/repository" element={<CalendarPage />} />
+              <Route path="/assignments" element={<AssignmentsPage />} />
+              <Route path="/utilities/assignments" element={<AssignmentsPage />} />
+              <Route path="/announcements" element={<AnnouncementsPage />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
+
+export default App;
